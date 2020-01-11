@@ -67,11 +67,11 @@ http {
             expires 30d;
             autoindex on; 
             add_header Cache-Control private;
-            alias /opt/wkflow/static/;
+            alias /opt/easyops/static/;
         }
  
         location /media {
-             alias  /opt/wkflow/media/;
+             alias  /opt/easyops/media/;
         }        
 
         error_page  404              /404.html;
