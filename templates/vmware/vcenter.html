@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}VCenter管理{% endblock %}
+{% block css %}
+    <link href="{% static "base/datatables.net-bs/css/dataTables.bootstrap.min.css" %} " rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "base/artDialog-6.0.4/css/ui-dialog.css" %}">
+{% endblock %}
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        VCenter管理
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i> Home</li>
+        <li class="active">VCenter管理</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <div class="box-header">
+                {% if '/vcentermg/add/' in request.session.permission_list %}
+                    <button class="king-btn king-radius king-success king-round king-btn-small">添加VC</button>
+                {% endif %}
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+            {% csrf_token %}
+              <table id="id_usertable" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>Vcenter名称</th>
+                  <th>管理IP</th>
+                  <th>管理端口</th>
+                  <th>最后一次同步数据状态</th>
+                  <th>最后一次同步数据时间</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for item in VCenterQuerySet %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.vc_name }}</td>
+                        <td>{{ item.vc_ip }}</td>
+                        <td>{{ item.vc_port }}</td>
+                        <td>{{ item.vc_sync_status }}</td>
+                        <td>{{ item.vc_created_time }}</td>
+                        <td>
+                            {% if '/vcsyncdata/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-primary king-round king-btn-small" onclick="SyncVcDataClick({{ item.id }})" title="同步数据">同步数据</button>
+                            {% endif %}
+                            {% if '/vcentermg/edit/(\\d+)/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-primary king-round king-btn-small" title="编辑">编辑</button>
+                            {% endif %}
+                            {% if '/vcentermg/del/(\\d+)/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-danger king-round king-btn-small" title="删除">删除</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                  {% empty %}
+                      <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                      </tr>
+                  {% endfor %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "base/datatables.net/js/jquery.dataTables.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "base/datatables.net-bs/js/dataTables.bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "base/artDialog-6.0.4/dist/dialog-min.js" %}"></script>
+    <script src="{% static "base/topbar-1.0/topbar.js" %}"></script>
+    <script>
+        $(document).ready(function () {
+            var language = {
+                search: '搜索：',
+                lengthMenu: "每页显示 _MENU_ 记录",
+                zeroRecords: "没找到相应的数据！",
+                info: "分页 _PAGE_ / _PAGES_",
+                infoEmpty: "暂无数据！",
+                infoFiltered: "(从 _MAX_ 条数据中搜索)",
+                paginate: {
+                    first: '<<',
+                    last: '>>',
+                    previous: '上一页',
+                    next: '下一页',
+                }
+            };
+            $("#id_usertable").DataTable({
+                pageLength : 10, //每页显示几条数据
+                lengthMenu: [5, 10, 25, 50, 100, 1000],
+                language: language
+            })
+        })
+    </script>
+    <script>
+        function SyncVcDataClick(id) {
+            if(id){
+                let formData = new FormData();
+                formData.append("csrfmiddlewaretoken", $("[name='csrfmiddlewaretoken']").val());
+                formData.append("vcenterid", id);
+                $.ajax({
+                    url: "/vcsyncdata/",
+                    type: "POST",
+                    processData: false,   // jQuery不要去处理发送的数据
+                    contentType: false,   // jQuery不要去设置Content-Type请求头
+                    data: formData,
+                    success: function (result) {
+                        if(result){
+                            if(result.code == 100){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                            }
+                            else if(result.code ==200){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-success',
+                                    timeOut: 1500
+                                });
+                                // setTimeout(window.location.reload(), 15000)
+                            }
+                            else if(result.code == 403){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                                window.location="/403/"
+                            }
+                            else if(result.code == 500){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                                window.location="/500/"
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+
+{% endblock %}

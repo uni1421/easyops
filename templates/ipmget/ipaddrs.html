@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}IP资源池{% endblock %}
+{% block css %}
+    <link href="{% static "base/datatables.net-bs/css/dataTables.bootstrap.min.css" %} " rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        IP资源池
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i> Home</li>
+        <li class="active">IP资源池</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="id_usertable" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>IP地址</th>
+                  <th>使用者</th>
+                  <th>IP状态</th>
+                  <th>ping</th>
+                  <th>备注</th>
+                  <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                  {% for item in IPoolsQuerySet %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.ipaddr }}</td>
+                        <td>{{ item.ipuser }}</td>
+                        <td>{{ item.ip_status }}</td>
+                        <td>
+                            {% if item.ip_ping == "up" %}
+                                <button class="king-btn king-radius king-success king-round king-btn-small">{{ item.ip_ping }}</button>
+                            {% elif item.ip_ping == "down" %}
+                                <button class="king-btn king-radius king-danger king-round king-btn-small">{{ item.ip_ping }}</button>
+                            {% else %}
+                                <button class="king-btn king-radius king-default king-round king-btn-small">{{ item.ip_ping }}</button>
+                            {% endif %}
+                        </td>
+                        <td>{{ item.remark }}</td>
+                        <td></td>
+                        <!--<td>
+                            {% if '/ipmg/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-primary king-round king-btn-small" title="扫描"></button>
+                            {% endif %}
+                            {% if '/ipmg/edit/(\\d+)/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-primary king-round king-btn-small" title="编辑"></button>
+                            {% endif %}
+                            {% if '/ipmg/del/(\\d+)/' in request.session.permission_list %}
+                                <button class="king-btn king-radius king-danger king-round king-btn-small" title="删除"></button>
+                            {% endif %}
+                        </td>-->
+                    </tr>
+                  {% empty %}
+                      <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                      </tr>
+                  {% endfor %}
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "base/datatables.net/js/jquery.dataTables.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "base/datatables.net-bs/js/dataTables.bootstrap.min.js" %}" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            var language = {
+                search: '搜索：',
+                lengthMenu: "每页显示 _MENU_ 记录",
+                zeroRecords: "没找到相应的数据！",
+                info: "分页 _PAGE_ / _PAGES_",
+                infoEmpty: "暂无数据！",
+                infoFiltered: "(从 _MAX_ 条数据中搜索)",
+                paginate: {
+                    first: '<<',
+                    last: '>>',
+                    previous: '上一页',
+                    next: '下一页',
+                }
+            };
+            $("#id_usertable").DataTable({
+                pageLength : 10, //每页显示几条数据
+                lengthMenu: [5, 10, 25, 50, 100, 1000],
+                language: language
+            })
+        })
+    </script>
+    <script>
+
+    </script>
+
+{% endblock %}

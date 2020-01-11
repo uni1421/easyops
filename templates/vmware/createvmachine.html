@@ -1,0 +1,192 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}克隆虚拟机{% endblock %}
+{% block css %}
+    <link href="{% static "base/datatables.net-bs/css/dataTables.bootstrap.min.css" %} " rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "base/artDialog-6.0.4/css/ui-dialog.css" %}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static "base/select2/dist/css/select2.min.css" %}">
+{% endblock %}
+
+{% block content %}
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        克隆虚拟机
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i> Home</li>
+        <li class="active">克隆虚拟机</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="box">
+            <!--<div class="box-header">
+                {% if '/vcentermg/add/' in request.session.permission_list %}
+                    <button class="king-btn king-radius king-success king-round king-btn-small">添加VC</button>
+                {% endif %}
+            </div>-->
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="king-block-content">
+                    <form class="form-horizontal" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="inputCount3" class="col-sm-2 control-label">虚拟机名称：</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" id="inputCount3" placeholder="虚拟机名称">
+                            </div>
+                            <span class="text-danger mt5 fl">*</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">主机名：</label>
+                            <div class="col-sm-3">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="主机名">
+
+                            </div>
+                            <span class="text-danger mt5 fl">*</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">IP：</label>
+                            <div class="col-sm-3">
+                                <select name="id_ipaddr" id="id_ipaddr" class="form-control select2">
+                                    <option value="深圳">深圳</option>
+                                    <option value="北京">北京</option>
+                                    <option value="上海">上海</option>
+                                    <option value="广州">广州</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">首选DNS：</label>
+                            <div class="col-sm-3">
+                                <select name="" id="" class="form-control select2">
+                                    <option value="深圳">深圳</option>
+                                    <option value="北京">北京</option>
+                                    <option value="上海">上海</option>
+                                    <option value="广州">广州</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">备选DNS：</label>
+                            <div class="col-sm-3">
+                                <select name="" id="" class="form-control select2">
+                                    <option value="深圳">深圳</option>
+                                    <option value="北京">北京</option>
+                                    <option value="上海">上海</option>
+                                    <option value="广州">广州</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">ESXI主机：</label>
+                            <div class="col-sm-3">
+                                <select name="" id="" class="form-control select2">
+                                    <option value="深圳">深圳</option>
+                                    <option value="北京">北京</option>
+                                    <option value="上海">上海</option>
+                                    <option value="广州">广州</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">存储位置：</label>
+                            <div class="col-sm-3">
+                                <select name="" id="" class="form-control select2">
+                                    <option value="深圳">深圳</option>
+                                    <option value="北京">北京</option>
+                                    <option value="上海">上海</option>
+                                    <option value="广州">广州</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-7 col-sm-offset-3">
+                                <input type="button" class="king-btn king-success mr10" value="提交" />
+                                <input type="reset" class="king-btn king-default" value="取消" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "base/artDialog-6.0.4/dist/dialog-min.js" %}"></script>
+    <script src="{% static "base/topbar-1.0/topbar.js" %}"></script>
+    <!-- Select2 -->
+    <script src="{% static "base/select2/dist/js/select2.full.min.js" %}"></script>
+    <script>
+        $('.select2').select2()
+    </script>
+    <script>
+        function SyncVcDataClick(id) {
+            if(id){
+                let formData = new FormData();
+                formData.append("csrfmiddlewaretoken", $("[name='csrfmiddlewaretoken']").val());
+                formData.append("vcenterid", id);
+                $.ajax({
+                    url: "/vcsyncdata/",
+                    type: "POST",
+                    processData: false,   // jQuery不要去处理发送的数据
+                    contentType: false,   // jQuery不要去设置Content-Type请求头
+                    data: formData,
+                    success: function (result) {
+                        if(result){
+                            if(result.code == 100){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                            }
+                            else if(result.code ==200){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-success',
+                                    timeOut: 1500
+                                });
+                                // setTimeout(window.location.reload(), 15000)
+                            }
+                            else if(result.code == 403){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                                window.location="/403/"
+                            }
+                            else if(result.code == 500){
+                                $topBar({
+                                    text: result.message,
+                                    setClass:'bg-danger',
+                                    timeOut: 1500
+                                });
+                                window.location="/500/"
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+
+{% endblock %}

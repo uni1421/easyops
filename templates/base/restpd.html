@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>找回密码</title>
+    <link rel="stylesheet" href="{% static "base/bootstrap-3.3.4/css/bootstrap_noresponsive.css" %}">
+    <!-- Custom styles for this template -->
+    <link href="{% static "base/css/login.css" %}" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="container">
+    <div class="panel-body">
+        <form class="form-signin" action="/reretpwd/" method="post">
+            <h2 class="form-signin-heading" align="center">工单系统</h2>
+            <!--<label for="inputEmail" class="sr-only">用户名</label>-->
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" id="validation_username" name="validation_username" class="form-control" placeholder="用户名" required
+                       autofocus>
+                <span class="text-danger hidden" id="validation_username_error">请输入用户名</span>
+            </div>
+            <div class="form-group">
+                <input type="text" id="validation_email" name="validation_email" class="form-control" placeholder="邮箱" required
+                       autofocus>
+                <span class="text-danger hidden" id="validation_error">请输入邮箱</span>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="button" id="id_submit">找回密码</button>
+        </form>
+    </div>
+
+</div> <!-- /container -->
+
+</body>
+
+<!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+<script src="{% static "base/jquery-1.10.2/jquery-1.10.2.min.js" %}"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        // 光标离开事件
+                $("#validation_username").blur(function () {
+                    $("#validation_username_error").addClass("hidden")
+                });
+                $("#validation_email").blur(function () {
+                    $("#validation_error").addClass("hidden");
+                });
+
+        $("#id_submit").click(function () {
+            if($("#validation_username").val().length < 2){
+                $("#validation_username_error").removeClass("hidden");
+                return false
+            }
+            if($("#validation_email").val().length < 6){
+                $("#validation_error").removeClass("hidden");
+                return false
+            }
+
+            if($("#validation_email").val().length > 6 && $("#validation_username").val().length > 2){
+                let formData = new FormData();
+                let validation_username = $("#validation_username").val();
+                let validation_email = $("#validation_email").val();
+                formData.append("csrfmiddlewaretoken", $("[name='csrfmiddlewaretoken']").val());
+                formData.append("validation_username", validation_username);
+                formData.append("validation_email", validation_email);
+                $.ajax({
+                    url: "/reretpwd/",
+                    type: "POST",
+                    processData: false,   // jQuery不要去处理发送的数据
+                    contentType: false,   // jQuery不要去设置Content-Type请求头
+                    data: formData,
+                    success: function (result) {
+                        if(result){
+                            if(result.code == 100){
+                                alert(result.message);
+                            }
+                            if(result.code == 200){
+                                alert(result.message);
+                                window.location.href="/login/";
+                            }
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+</html>
