@@ -40,6 +40,5 @@ urlpatterns = [
     url(r'^500/$', views.Service500View, name="500"),
     url(r'^403/$', views.Service403View, name="403"),
     url(r'^404/$', views.Service404View, name="404"),
-    url(r'^test/$', views.TestView.as_view()),
-    url(r'^testjson/$', views.TestjsonView.as_view()),
+
 ]

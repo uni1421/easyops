@@ -1,7 +1,7 @@
 from channels.generic.websocket import WebsocketConsumer
 import json
 import paramiko
-from . import models
+from webssh import models
 from django.db.models import Q
 from asgiref.sync import async_to_sync
 import threading
@@ -109,9 +109,7 @@ class WebSSHConsumer(WebsocketConsumer):
             remote_ip = self.scope['client'][0]
             self.opsuser = self.scope['user']  # 堡垒机用户
             hostid = self.scope['url_route']['args'][0]  # ssh连接主机id
-            hostobj = models.HostBindRemoteUser.objects.filter(Q(host__id=hostid),
-                                                               Q(userprofile__username=self.opsuser) | Q(
-                                                                   hostgroup__userprofile__username=self.opsuser)).distinct().first()
+            hostobj = models.HostBindRemoteUser.objects.filter(Q(host__id=hostid), Q(userprofile__username=self.opsuser)| Q(hostgroup__userprofile__username=self.opsuser)).distinct().first()
 
             if hostobj:
                 self.host = hostobj.host.mgaddress
@@ -159,7 +157,6 @@ class WebSSHConsumer(WebsocketConsumer):
                 }
             )
 
-
         except Exception as e:
             logger.error(e)
             logger.error(traceback.format_exc())
@@ -178,9 +175,7 @@ class WebSSHConsumer(WebsocketConsumer):
         self.send(text_data=event["text"])
 
     def receive(self, text_data=None, bytes_data=None):
-
         try:
-
             if text_data in ['\r', '\n', '\r\n']:
                 CMD_CONTENT.append(''.join(CMD_STR))
                 CMD_STR.clear()
@@ -189,9 +184,7 @@ class WebSSHConsumer(WebsocketConsumer):
                     self.recorderlog.write("i", ''.join(CMD_CONTENT))
                 CMD_CONTENT.clear()
             else:
-
                 CMD_STR.append(text_data)
-
             self.shell.send(text_data)
 
         except Exception as e:
@@ -199,14 +192,14 @@ class WebSSHConsumer(WebsocketConsumer):
             logger.error(traceback.format_exc())
 
     def disconnect(self, close_code):
-
         try:
             models.Log.objects.filter(id=self.log.id).update(end_time=datetime.datetime.now())
             logobj = models.Log.objects.filter(id=self.log.id).first()
             if logobj.end_time and self.log.start_time:
                 models.Log.objects.filter(id=self.log.id).update(hour_longtime=logobj.end_time - self.log.start_time)
                 self.recorderlog.save()
-
+            self.shell.close()
         except Exception as e:
+            self.shell.close()
             logger.error(e)
             logger.error(traceback.format_exc())

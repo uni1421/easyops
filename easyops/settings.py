@@ -157,8 +157,10 @@ MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = "users.UserProfile"
-# channels redis
+
+# channels
 ASGI_APPLICATION = 'easyops.routing.application'
+# channels redis
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
