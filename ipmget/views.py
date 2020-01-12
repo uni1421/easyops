@@ -1,68 +1,62 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from ipmget import models
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 import logging
-import traceback
-from vm import models
-from vm.utils import celery_tasks
-from ipmget.utils import vmutils
+from ipmget.utils import celery_tasks
 # Create your views here.
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ipmanagement")
 
 
-class VcenterDetailView(View):
+class IpmtScanIPooolView(View):
+
     @method_decorator(login_required)
     def get(self, request):
-        VCenterQuerySet = models.VCenter.objects.all()
-        return render(request, "vmware/vcenter.html", {"VCenterQuerySet": VCenterQuerySet})
+
+        IPollsQuerySet = models.IPools.objects.all()
+
+        return render(request, "ipmanagement/ipmt.html", {"IPollsQuerySet": IPollsQuerySet})
 
     @method_decorator(login_required)
     def post(self, request):
-        pass
-
-
-class SyncVcenterDetailView(View):
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        pass
-
-    @method_decorator(login_required)
-    def post(self, request):
-        vcenterid = request.POST.get("vcenterid")
-        VcenterObj = models.VCenter.objects.filter(id=vcenterid).first()
-        if VcenterObj:
-            celery_tasks.SyncVcenterAllVM.delay(VcenterObj.vc_ip, VcenterObj.vc_user, VcenterObj.vc_pwd, VcenterObj.vc_port)
-            return JsonResponse({"code": 200, "message": "执行中"})
+        logger.info("======================开始执行扫描=======================")
+        id = request.POST.get("id")
+        if id:
+            if id.isdigit():
+                IPollsObj = models.IPools.objects.filter(id=id).first()
+                if IPollsObj:
+                    tasks.ScanHosts.delay(IPollsObj.ip_start, IPollsObj.ip_end)
+                    logger.info("======================结束执行扫描=======================")
+                    return JsonResponse({"code": 200, "message": "执行中"})
         else:
             return JsonResponse({"code": 500, "message": "系统出现异常,请记录下错误场景并及时与开发人员联系"})
 
 
-class VMachineListView(View):
+class IpmtIpSearchView(View):
+
     @method_decorator(login_required)
     def get(self, request):
-        VMHostQuerySet = models.VMHosts.objects.all()
-        return render(request, "vmware/vmachine.html", {"VMHostQuerySet": VMHostQuerySet})
 
-    @method_decorator(login_required)
-    def post(self, request):
-        pass
+        return render(request, "ipmanagement/ipsearch.html")
 
 
-class ClonseVMListView(View):
+class IpmtDNSmtView(View):
+
     @method_decorator(login_required)
     def get(self, request):
-        IPAddrQuerySet, DNSPoolsQuerySet = vmutils.IPAvailableResources()
 
-        return render(request, "vmware/createvmachine.html", {"IPAddrQuerySet": IPAddrQuerySet, "DNSPoolsQuerySet": DNSPoolsQuerySet})
+        DNSPollsQuerySet = models.DNSPools.objects.all()
+        print("DNSPollsQuerySet", DNSPollsQuerySet)
+        return render(request, "ipmanagement/dnsmt.html", {"DNSPollsQuerySet": DNSPollsQuerySet})
 
+
+class IPAddrsView(View):
     @method_decorator(login_required)
-    def post(self, request):
-        pass
+    def get(self, request):
 
-
-
-
+        IPoolsQuerySet = models.IPAddr.objects.all()
+        return render(request, "ipmanagement/ipaddrs.html", {"IPoolsQuerySet": IPoolsQuerySet})
 

@@ -1,13 +1,13 @@
 from __future__ import absolute_import, unicode_literals
 
 from celery import shared_task
-from ops.celery import app
+from easyops.celery import app
 import logging
 import traceback
 import nmap
 import re
 import os
-from ipmanagement import models
+from ipmget import models
 
 logger = logging.getLogger("ipmanagement")
 

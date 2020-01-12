@@ -45,8 +45,7 @@ INSTALLED_APPS = [
     'ipmget.apps.IpmgetConfig',
     'dashboard.apps.DashboardConfig',
     'wkflow.apps.WkflowConfig',
-    'users.utils.permmiddware.ValidPermission',
-    'channels',
+    # 'channels',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.utils.permmiddware.ValidPermission',
 ]
 
 ROOT_URLCONF = 'easyops.urls'
@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'easyops',
         'USER': 'easyops',
         'PASSWORD': 'easyops',
-        'HOST': '127.0.0.1',
+        'HOST': '192.168.102.17',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -153,25 +153,24 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 if not os.path.exists(MEDIA_ROOT):
     os.mkdir(MEDIA_ROOT)
-MEDIA_URL = '/media/'
 
 
 AUTH_USER_MODEL = "users.UserProfile"
 
 # channels
-ASGI_APPLICATION = 'easyops.routing.application'
+# ASGI_APPLICATION = 'easyops.routing.application'
 # channels redis
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [('192.168.102.17', 6379)],
+#         },
+#     },
+# }
 
 # celery Redis
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_BROKER_URL = 'redis://192.168.102.17:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = False

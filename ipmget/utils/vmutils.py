@@ -1,4 +1,4 @@
-from ipmanagement import models
+from ipmget import models
 from django.db.models import Q
 
 

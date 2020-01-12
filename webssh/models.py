@@ -44,7 +44,7 @@ class HostGroup(models.Model):
         verbose_name_plural = "主机组表"
 
 
-class Logs(models.Model):
+class SShLogs(models.Model):
     LOGIN_CHOICES = (
         ('web', 'web'),
         ('ssh', 'ssh')
@@ -66,7 +66,7 @@ class RecorderLog(models.Model):
     """
     存储审计回放
     """
-    log = models.ForeignKey(to="Logs", null=True, blank=True, on_delete=models.SET_NULL)
+    log = models.ForeignKey(to="SShLogs", null=True, blank=True, on_delete=models.SET_NULL)
     logpath = models.TextField(null=True, blank=True, verbose_name='回放日志存储路径')
 
     class Meta:
