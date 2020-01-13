@@ -2,10 +2,10 @@ from django.conf.urls import url
 from ipmget import views
 
 urlpatterns = [
-    url(r'^ipmget/$', views.IpmtScanIPooolView.as_view()),
-    url(r'^ipmget/add/$', views.IpmtScanIPooolView.as_view()),
-    url(r'^ipmget/edit/([0-9]+)/$', views.IpmtScanIPooolView.as_view()),
-    url(r'^ipmget/del/([0-9]+)/$', views.IpmtScanIPooolView.as_view()),
+    url(r'^$', views.IpmtScanIPooolView.as_view()),
+    url(r'^add/$', views.IpmtScanIPooolView.as_view()),
+    url(r'^edit/([0-9]+)/$', views.IpmtScanIPooolView.as_view()),
+    url(r'^del/([0-9]+)/$', views.IpmtScanIPooolView.as_view()),
 
     url(r'^ipmgaddr/$', views.IPAddrsView.as_view()),
 

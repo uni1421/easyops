@@ -24,9 +24,8 @@ urlpatterns = [
     url(r'^logout/$', views.LogoutView.as_view(), name="logout"),
     url(r'^reretpwd/$', views.ResetPaswordView.as_view(), name="reretpwd"),
     url(r'^custompwd/$', views.CustompwdView.as_view(), name="custompwd"),
-    url(r'^users', include('users.urls')),
-    url(r'^ipmget', include('ipmget.urls')),
-    url(r'^vmware', include('vm.urls')),
+    url(r'^users/', include('users.urls')),
+    url(r'^ipmget/', include('ipmget.urls')),
+    url(r'^vmware/', include('vm.urls')),
     url(r'^terminal/', include('webssh.urls')),
-
 ]

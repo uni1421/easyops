@@ -16,9 +16,9 @@ class IpmtScanIPooolView(View):
     @method_decorator(login_required)
     def get(self, request):
 
-        IPollsQuerySet = models.IPools.objects.all()
+        IPollsQuerySet = models.IPDHCPools.objects.all()
 
-        return render(request, "ipmanagement/ipmt.html", {"IPollsQuerySet": IPollsQuerySet})
+        return render(request, "ipmget/ipmt.html", {"IPollsQuerySet": IPollsQuerySet})
 
     @method_decorator(login_required)
     def post(self, request):
@@ -26,9 +26,9 @@ class IpmtScanIPooolView(View):
         id = request.POST.get("id")
         if id:
             if id.isdigit():
-                IPollsObj = models.IPools.objects.filter(id=id).first()
+                IPollsObj = models.IPDHCPools.objects.filter(id=id).first()
                 if IPollsObj:
-                    tasks.ScanHosts.delay(IPollsObj.ip_start, IPollsObj.ip_end)
+                    celery_tasks.ScanHosts.delay(IPollsObj.ip_start, IPollsObj.ip_end)
                     logger.info("======================结束执行扫描=======================")
                     return JsonResponse({"code": 200, "message": "执行中"})
         else:
@@ -40,7 +40,7 @@ class IpmtIpSearchView(View):
     @method_decorator(login_required)
     def get(self, request):
 
-        return render(request, "ipmanagement/ipsearch.html")
+        return render(request, "ipmget/ipsearch.html")
 
 
 class IpmtDNSmtView(View):
@@ -50,7 +50,7 @@ class IpmtDNSmtView(View):
 
         DNSPollsQuerySet = models.DNSPools.objects.all()
         print("DNSPollsQuerySet", DNSPollsQuerySet)
-        return render(request, "ipmanagement/dnsmt.html", {"DNSPollsQuerySet": DNSPollsQuerySet})
+        return render(request, "ipmget/dnsmt.html", {"DNSPollsQuerySet": DNSPollsQuerySet})
 
 
 class IPAddrsView(View):
@@ -58,5 +58,5 @@ class IPAddrsView(View):
     def get(self, request):
 
         IPoolsQuerySet = models.IPAddr.objects.all()
-        return render(request, "ipmanagement/ipaddrs.html", {"IPoolsQuerySet": IPoolsQuerySet})
+        return render(request, "ipmget/ipaddrs.html", {"IPoolsQuerySet": IPoolsQuerySet})
 

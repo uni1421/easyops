@@ -1,20 +1,23 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}系统账号{% endblock %}
+{% block title %}角色管理{% endblock %}
 {% block css %}
-     <link href="{% static "base/datatables-1.10.7/dataTables.bootstrap.css" %} " rel="stylesheet"/>
+    <link href="{% static "base/datatables.net-bs/css/dataTables.bootstrap.min.css" %} " rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 
-    <!-- Page Heading -->
-    <div class="row page-header-box">
-        <div class="col-lg-12">
-            <h1 class="page-header">
-                角色管理
-            </h1>
-        </div>
-    </div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        角色管理
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i> Home</li>
+        <li>角色管理</li>
+      </ol>
+    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -24,7 +27,7 @@
           <div class="box">
             <div class="box-header">
                 {% if '/users/role/add/' in request.session.permission_list %}
-                    <button class="king-btn king-radius king-success king-round king-btn-small">添加角色</button>
+                    <button class="btn btn-success btn-xs">添加角色</button>
                 {% endif %}
             </div>
             <!-- /.box-header -->
@@ -54,10 +57,10 @@
                         <td>{{ item.updated_time }}</td>
                         <td>
                             {% if '/users/role/edit/(\\d+)/' in request.session.permission_list %}
-                                <button class="king-btn king-radius king-primary king-round king-btn-small" title="编辑">编辑</button>
+                                <button class="btn btn-primary btn-xs" title="编辑">编辑</button>
                             {% endif %}
                             {% if '/users/role/del/(\\d+)/' in request.session.permission_list %}
-                                <button class="king-btn king-radius king-danger king-round king-btn-small" title="删除">删除</button>
+                                <button class="btn btn-danger btn-xs" title="删除">删除</button>
                             {% endif %}
                         </td>
                     </tr>
@@ -86,8 +89,8 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{% static "base/datatables-1.10.7/jquery.dataTables.min.js" %}" type="text/javascript"></script>
-    <script src="{% static "base/datatables-1.10.7/dataTables.bootstrap.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "base/datatables.net/js/jquery.dataTables.min.js" %}" type="text/javascript"></script>
+    <script src="{% static "base/datatables.net-bs/js/dataTables.bootstrap.min.js" %}" type="text/javascript"></script>
     <script>
         $(document).ready(function () {
             var language = {
