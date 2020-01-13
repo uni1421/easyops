@@ -49,7 +49,6 @@ class IpmtDNSmtView(View):
     def get(self, request):
 
         DNSPollsQuerySet = models.DNSPools.objects.all()
-        print("DNSPollsQuerySet", DNSPollsQuerySet)
         return render(request, "ipmget/dnsmt.html", {"DNSPollsQuerySet": DNSPollsQuerySet})
 
 

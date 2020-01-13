@@ -27,7 +27,7 @@
 
           <div class="box">
             <div class="box-header">
-                {% if '/vcentermg/add/' in request.session.permission_list %}
+                {% if '/vmware/vcentermg/add/' in request.session.permission_list %}
                     <button class="king-btn king-radius king-success king-round king-btn-small">添加VC</button>
                 {% endif %}
             </div>
@@ -56,13 +56,13 @@
                         <td>{{ item.vc_sync_status }}</td>
                         <td>{{ item.vc_created_time }}</td>
                         <td>
-                            {% if '/vcsyncdata/' in request.session.permission_list %}
+                            {% if '/vmware/vcentermg/vcsyncdata/' in request.session.permission_list %}
                                 <button class="king-btn king-radius king-primary king-round king-btn-small" onclick="SyncVcDataClick({{ item.id }})" title="同步数据">同步数据</button>
                             {% endif %}
-                            {% if '/vcentermg/edit/(\\d+)/' in request.session.permission_list %}
+                            {% if '/vmware/vcentermg/vcentermg/edit/(\\d+)/' in request.session.permission_list %}
                                 <button class="king-btn king-radius king-primary king-round king-btn-small" title="编辑">编辑</button>
                             {% endif %}
-                            {% if '/vcentermg/del/(\\d+)/' in request.session.permission_list %}
+                            {% if '/vmware/vcentermg/del/(\\d+)/' in request.session.permission_list %}
                                 <button class="king-btn king-radius king-danger king-round king-btn-small" title="删除">删除</button>
                             {% endif %}
                         </td>
