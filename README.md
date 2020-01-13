@@ -6,5 +6,5 @@
 [![Paramiko](https://img.shields.io/badge/Paramiko-2.4.1-brightgreen)](http://www.paramiko.org/)
 [![Celery](https://img.shields.io/badge/pyvmomi-6.7.1-brightgreen)](https://github.com/vmware/pyvmomi)
 [![ansible](https://img.shields.io/badge/ansible-2.9.2-brightgreen)](https://docs.ansible.com/ansible/latest/dev_guide/developing_api.html)
-
+[![AdminLTE](https://img.shields.io/badge/AdminLTE-2.4.18-brightgreen)](https://adminlte.io/)
 
