@@ -145,12 +145,18 @@
                                 });
                             }
                             else if(result.code ==200){
-                                $topBar({
-                                    text: result.message,
-                                    setClass:'bg-success',
-                                    timeOut: 1500
+                                var d=dialog({
+                                width: 440,
+                                title: "提示",
+                                content: '<div class="king-notice-box king-notice-happy">' +
+                                                '<p class="king-notice-text"> 操作成功！</p>' +
+                                            '</div>',
                                 });
-                                // setTimeout(window.location.reload(), 15000)
+                                d.show();
+                                setTimeout(function() {
+                                    d.close().remove();
+                                }, 2900);
+                                setTimeout("window.location.reload()", 3000)
                             }
                             else if(result.code == 403){
                                 $topBar({
@@ -161,12 +167,18 @@
                                 window.location="/403/"
                             }
                             else if(result.code == 500){
-                                $topBar({
-                                    text: result.message,
-                                    setClass:'bg-danger',
-                                    timeOut: 1500
+                                var d=dialog({
+                                width: 440,
+                                title: "提示",
+                                content: '<div class="king-notice-box king-notice-sad">' +
+                                                '<p class="king-notice-text"> 系统异常，请联系管理员！</p>' +
+                                            '</div>',
                                 });
-                                window.location="/500/"
+                                d.show();
+                                setTimeout(function() {
+                                    d.close().remove();
+                                }, 2000);
+                                setTimeout('window.location="/500/"', 2500)
                             }
                         }
                     }
