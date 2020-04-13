@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'easyops',
         'USER': 'easyops',
         'PASSWORD': 'easyops',
-        'HOST': '192.168.102.17',
+        'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -157,20 +157,8 @@ if not os.path.exists(MEDIA_ROOT):
 
 AUTH_USER_MODEL = "users.UserProfile"
 
-# channels
-# ASGI_APPLICATION = 'easyops.routing.application'
-# channels redis
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": [('192.168.102.17', 6379)],
-#         },
-#     },
-# }
-
 # celery Redis
-CELERY_BROKER_URL = 'redis://192.168.102.17:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = False
@@ -186,14 +174,6 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = "xxxx@qq.com"  # 帐号
 EMAIL_HOST_PASSWORD = "xxxxx"  # 授权码（****）
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-# 大汉三通短信
-md5pwd = hashlib.md5()
-md5pwd.update(str("密码").encode())
-dhpassword = md5pwd.hexdigest()
-dhsmsurl = "http://www.dh3t.com/json/sms/Submit"
-dhaccount = "账号"
 
 
 # 认证跳转页
