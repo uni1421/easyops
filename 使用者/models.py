@@ -87,7 +87,7 @@ class UserProfile(AbstractUser):
 
 class UserGroup(models.Model):
     """
-    用户组/部门表/门店表
+    用户组
     """
     groupname = models.CharField(max_length=128, verbose_name="用户组", help_text="用户组")
 
