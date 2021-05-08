@@ -10,7 +10,7 @@ channels==2.3.0
 channels-redis==2.3.3
 paramiko==2.4.1
 
-eventlet==0.25.1
+eventlet==0.31.0
 uwsgi==2.0.18
 
 
